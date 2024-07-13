@@ -3,7 +3,7 @@
 # 
 FROM maven:3.8.3-openjdk-17 AS build
 WORKDIR /app
-COPY ./app/
+COPY . /app/
 RUN mnv clean package
 
 # 
