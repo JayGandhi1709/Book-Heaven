@@ -65,17 +65,22 @@ public class UserController {
     	}
     }
     
-//    @PostMapping("/login")
-//    public ResponseEntity<Object> loginUser(@RequestBody User user) {
-//    	User existUser = userService.getUserByEmail(user.getEmail());
-//    	
+    @PostMapping("/login")
+    public ResponseEntity<Object> loginUser(@RequestBody User user) {
+//    	System.out.println("user : "+user.getPassword());
+    	User existingUser = userService.getUserByEmail(user.getEmail());
+//    	System.out.println("existing user : "+existingUser.getPassword());
+    	
+//    	System.out.println(user.getPassword().equals(existingUser.getPassword()));
+    	
 //    	if (existUser != null && passwordEncoder.matches(user.getPassword(), existUser.getPassword())) {
-//            return ResponseEntity.status(HttpStatus.ACCEPTED).body(JsonResponseUtils.toJson(new ResponseMessage<>(true, "Login successful", existUser)));
-//        } else {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(JsonResponseUtils.toJson(new ResponseMessage<>(false, "Invalid email or password")));
-//        }
-//    	
-//    }
+   		if (existingUser != null && user.getPassword().equals(existingUser.getPassword())) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(JsonResponseUtils.toJson(new ResponseMessage<>(true, "Login successful", existingUser)));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(JsonResponseUtils.toJson(new ResponseMessage<>(false, "Invalid email or password")));
+        }
+    	
+    }
     
 
     @PutMapping("/{id}")
