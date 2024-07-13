@@ -4,7 +4,7 @@
 FROM maven:3.8.3-openjdk-17 AS build
 WORKDIR /app
 COPY . /app/
-RUN mvm clean package
+RUN mvn clean package
 
 # 
 # Package Stage
