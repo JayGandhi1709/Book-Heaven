@@ -9,7 +9,7 @@ RUN mnv clean package
 # 
 # Package Stage
 # 
-FROM openjdk-17-alpine
+FROM openjdk:17-alpine
 WORKDIR /app
 COPY --from=build /app/target/*jar /app/app.jar
 EXPOSE 8080
