@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Document(collection = "users")
 public class User {
     @Id
