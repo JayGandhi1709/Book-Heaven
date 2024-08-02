@@ -65,6 +65,14 @@ public class UserService {
         return user;
     }
 
+    public User forgotPassword(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            // Send email with password reset link
+        }
+        return user;
+    }
+
     public String authenticate(String email, String password) throws AuthenticationException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         final UserDetails userDetails = userDetailsService.loadUserByUsername(email);

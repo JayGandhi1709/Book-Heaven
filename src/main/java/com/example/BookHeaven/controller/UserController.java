@@ -66,8 +66,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/health-checl")
-    public String hello() {
+    @GetMapping("/health-check")
+    public String healthCheck() {
         return "ok";
     }
 
@@ -155,7 +155,6 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable String id, @RequestBody User user) {
         try {
-
             User updatedUser = userService.updateUser(id, user);
 
             if (updatedUser != null) {

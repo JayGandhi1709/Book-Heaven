@@ -33,6 +33,10 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
         String authenticateHeader = req.getHeader("Authorization");
+        // if (authenticateHeader == null) {
+        // res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access");
+        // return;
+        // }
         String email = null;
         String jwt = null;
         if (authenticateHeader != null && authenticateHeader.startsWith("Bearer ")) {
@@ -48,6 +52,12 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
+        // else if (email == null) {
+        // // If email is null, the token is invalid
+        // res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired
+        // token");
+        // return;
+        // }
         res.addHeader("admin", "jay");
         chain.doFilter(req, res);
     }
