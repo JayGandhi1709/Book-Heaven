@@ -1,6 +1,8 @@
 package com.example.BookHeaven.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,10 +70,30 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Object> loginUser(@RequestBody User user) {
         try {
-            String token = userService.authenticate(user.getEmail(), user.getPassword());
+            Map<String, Object> LoggedInUser = userService.authenticate(user.getEmail(), user.getPassword());
 
             return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(JsonResponseUtils.toJson(new ResponseMessage<>(true, "Login successful", token)));
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<>(true, "Login successful",
+                            LoggedInUser)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        }
+    }
+
+    // get logged in user details by JWT TOken
+    @GetMapping("/tokenIsValid")
+    public ResponseEntity<Object> getUserDetails(@RequestHeader("Authorization") String token) {
+        try {
+            if (token != null && token.startsWith("Bearer ")) {
+                User userDetails = userService.getUserDetails(token.substring(7)).withPassword(null);
+
+                // userDetails.setPassword(null);
+
+                return ResponseEntity.status(HttpStatus.ACCEPTED)
+                        .body(JsonResponseUtils.toJson(new ResponseMessage<>(true, "User details", userDetails)));
+            }
+            throw new RuntimeException("Token is required");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));

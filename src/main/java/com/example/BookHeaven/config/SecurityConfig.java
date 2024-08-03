@@ -40,7 +40,7 @@ public class SecurityConfig {
         http.csrf(t -> t.disable()).authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/user/**", "/api/book/**")
-                .hasRole("USER")
+                .hasRole("ADMIN")
                 .anyRequest().authenticated());
 
         http.sessionManagement(

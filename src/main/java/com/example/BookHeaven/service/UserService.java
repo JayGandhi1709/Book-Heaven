@@ -1,6 +1,7 @@
 package com.example.BookHeaven.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -73,9 +74,20 @@ public class UserService {
         return user;
     }
 
-    public String authenticate(String email, String password) throws AuthenticationException {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        return jwtUtil.generateToken(userDetails.getUsername());
+    // get logged in user details by JWT TOken
+    public User getUserDetails(String token) {
+        String email = jwtUtil.extractUsername(token);
+        return userRepository.findByEmail(email);
+    }
+
+    public Map<String, Object> authenticate(String email, String password) throws AuthenticationException {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            final User user = getUserByEmail(email).withPassword(null);
+            final String token = jwtUtil.generateToken(email);
+            return Map.of("user", user, "token", token);
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("Invalid email or password");
+        }
     }
 }

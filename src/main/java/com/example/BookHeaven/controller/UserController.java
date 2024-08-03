@@ -89,19 +89,21 @@ public class UserController {
         }
     }
 
-    // write a code for login Api and return it success ,msg and token
-    @PostMapping("/login")
-    public ResponseEntity<Object> loginUser(@RequestBody User user) {
-        try {
-            String token = userService.authenticate(user.getEmail(), user.getPassword());
+    // // write a code for login Api and return it success ,msg and token
+    // @PostMapping("/login")
+    // public ResponseEntity<Object> loginUser(@RequestBody User user) {
+    // try {
+    // String token = userService.authenticate(user.getEmail(), user.getPassword());
 
-            return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(JsonResponseUtils.toJson(new ResponseMessage<>(true, "Login successful", token)));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
-        }
-    }
+    // return ResponseEntity.status(HttpStatus.ACCEPTED)
+    // .body(JsonResponseUtils.toJson(new ResponseMessage<>(true, "Login
+    // successful", token)));
+    // } catch (Exception e) {
+    // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    // .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false,
+    // e.getMessage())));
+    // }
+    // }
 
     // @PostMapping("/login")
     // public ResponseEntity<Object> loginUser(@RequestBody User user) {

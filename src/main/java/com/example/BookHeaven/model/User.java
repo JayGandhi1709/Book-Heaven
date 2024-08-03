@@ -7,8 +7,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.With;
 
 @Data
 @NoArgsConstructor
@@ -16,11 +19,17 @@ import lombok.NoArgsConstructor;
 public class User {
 	@Id
 	String id;
+
 	String name;
 
 	@Indexed(unique = true)
 	String email;
+
+	@With // This will generate a withPassword method
+	// @JsonIgnore // This will prevent the password from being returned in the
+	// response
 	String password;
+
 	String role = "USER";
 
 	// Constructor
