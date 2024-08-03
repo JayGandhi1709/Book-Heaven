@@ -20,6 +20,7 @@ import com.example.BookHeaven.filter.JwtFilter;
 import com.example.BookHeaven.service.UserDetailsServiceImpl;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -42,17 +43,16 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(t -> t.disable()).authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/user/**", "/api/book/**")
-                .hasRole("ADMIN")
-                .anyRequest().authenticated());
+        http.cors(c -> c.configurationSource(corsConfigurationSource())).csrf(t -> t.disable())
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/user/**", "/api/book/**")
+                        .hasRole("ADMIN")
+                        .anyRequest().authenticated());
 
         http.sessionManagement(
                 sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).cors(c -> {
-            c.configurationSource(corsConfigurationSource());
-        });
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 
@@ -69,15 +69,17 @@ public class SecurityConfig {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        // innsted of localhost:3000 all your frontend domain allow
+
         configuration.setAllowedOrigins(Arrays.asList("*"));
 
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT",
+                "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization",
+                "Content-Type"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }
