@@ -4,10 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,36 +16,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.BookHeaven.Utils.JsonResponseUtils;
-import com.example.BookHeaven.Utils.JwtUtil;
 import com.example.BookHeaven.Utils.ResponseMessage;
 import com.example.BookHeaven.model.User;
-import com.example.BookHeaven.service.UserDetailsServiceImpl;
 import com.example.BookHeaven.service.UserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AuthenticationManager authenticationManager;
-
-    private final UserDetailsServiceImpl userDetailsService;
-
-    private final JwtUtil jwtUtil;
-
-    public UserController(PasswordEncoder passwordencoder, UserService userService,
-            AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, JwtUtil jwtUtil) {
+    public UserController(PasswordEncoder passwordencoder, UserService userService) {
         this.passwordEncoder = passwordencoder;
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping
+    @GetMapping({ "/users", "/admin/users" })
     public List<User> getAllUsers() {
         try {
             return userService.getAllUsers();
@@ -57,7 +42,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/admin/users/{id}")
     public User getUserById(@PathVariable String id) {
         try {
             return userService.getUserById(id);
@@ -72,6 +57,7 @@ public class UserController {
     }
 
     @PostMapping
+    @GetMapping("/users")
     public ResponseEntity<Object> createUser(@RequestBody User user) throws Exception {
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -154,7 +140,7 @@ public class UserController {
 
     // }
 
-    @PutMapping("/{id}")
+    @PutMapping("/admin/user/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable String id, @RequestBody User user) {
         try {
             User updatedUser = userService.updateUser(id, user);
@@ -173,7 +159,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/users/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable String id) {
         try {
             User deletedUser = userService.deleteUser(id);

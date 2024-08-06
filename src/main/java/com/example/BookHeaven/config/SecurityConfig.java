@@ -45,9 +45,9 @@ public class SecurityConfig {
 
         http.cors(c -> c.configurationSource(corsConfigurationSource())).csrf(t -> t.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/user/**", "/api/book/**")
-                        .hasRole("ADMIN")
+                        .requestMatchers("/api/auth/*").permitAll()
+                        .requestMatchers("/api/books/*").hasRole("USER")
+                        .requestMatchers("/api/admin/*").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         http.sessionManagement(
