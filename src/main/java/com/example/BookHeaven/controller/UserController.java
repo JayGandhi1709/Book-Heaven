@@ -21,7 +21,7 @@ import com.example.BookHeaven.model.User;
 import com.example.BookHeaven.service.UserService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin/users")
 public class UserController {
 
     private final UserService userService;
@@ -33,7 +33,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping({ "/users", "/admin/users" })
+    @GetMapping
     public List<User> getAllUsers() {
         try {
             return userService.getAllUsers();
@@ -42,7 +42,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/admin/users/{id}")
+    @GetMapping("/{id}")
     public User getUserById(@PathVariable String id) {
         try {
             return userService.getUserById(id);
@@ -57,7 +57,6 @@ public class UserController {
     }
 
     @PostMapping
-    @GetMapping("/users")
     public ResponseEntity<Object> createUser(@RequestBody User user) throws Exception {
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -140,7 +139,7 @@ public class UserController {
 
     // }
 
-    @PutMapping("/admin/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable String id, @RequestBody User user) {
         try {
             User updatedUser = userService.updateUser(id, user);
@@ -159,7 +158,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/admin/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable String id) {
         try {
             User deletedUser = userService.deleteUser(id);

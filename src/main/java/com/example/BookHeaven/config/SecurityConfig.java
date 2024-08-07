@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,6 +19,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.BookHeaven.filter.JwtFilter;
 import com.example.BookHeaven.service.UserDetailsServiceImpl;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,8 +51,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/*").permitAll()
                         .requestMatchers("/api/books/*").hasRole("USER")
-                        .requestMatchers("/api/admin/*").hasRole("ADMIN")
-                        .anyRequest().authenticated());
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().hasRole("ADMIN"));
+
+        http.exceptionHandling(entry -> entry.authenticationEntryPoint(authenticationEntryPoint()));
 
         http.sessionManagement(
                 sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -63,6 +69,18 @@ public class SecurityConfig {
         AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
         return auth.build();
+    }
+
+    @Bean
+    protected AuthenticationEntryPoint authenticationEntryPoint() {
+        return (HttpServletRequest request, HttpServletResponse response,
+                org.springframework.security.core.AuthenticationException authException) -> {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            // response.getWriter().write("{\"message\":\"" + authException.getMessage() +//
+            // "\"}");
+            response.getWriter().write("{\"message\":\"Unauthorised\"}");
+        };
     }
 
     // cors configure
