@@ -54,7 +54,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().hasRole("ADMIN"));
 
-        http.exceptionHandling(entry -> entry.authenticationEntryPoint(authenticationEntryPoint()));
+        // http.exceptionHandling(entry ->
+        // entry.authenticationEntryPoint(authenticationEntryPoint()));
 
         http.sessionManagement(
                 sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
