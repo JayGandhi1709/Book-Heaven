@@ -1,13 +1,13 @@
 package com.example.BookHeaven.service;
 
-import com.example.BookHeaven.model.Book;
-import com.example.BookHeaven.model.User;
-import com.example.BookHeaven.repository.BookRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.example.BookHeaven.model.Book;
+import com.example.BookHeaven.model.User;
+import com.example.BookHeaven.repository.BookRepository;
 
 @Service
 public class BookService {
@@ -16,18 +16,18 @@ public class BookService {
     private BookRepository bookRepository;
 
     // Get all books
-    public List<Book> findAllBooks() {
+    public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
     // Get book by ID
-    public Optional<Book> findBookById(String id) {
-        return bookRepository.findById(id);
+    public Book getBookById(String id) {
+        return bookRepository.findById(id).orElse(null);
     }
 
     // Create a new book
     public Book createBook(Book book) {
-    	try {
+        try {
             return bookRepository.save(book);
         } catch (Exception e) {
             // Handle duplicate email exception
@@ -46,7 +46,11 @@ public class BookService {
     }
 
     // Delete a book
-    public void deleteBook(String id) {
-        bookRepository.deleteById(id);
+    public Book deleteBook(String id) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book != null) {
+            bookRepository.deleteById(id);
+        }
+        return book;
     }
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,20 +33,32 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public ResponseEntity<Object> getAllUsers() throws Exception {
         try {
-            return userService.getAllUsers();
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(JsonResponseUtils
+                    .toJson(new ResponseMessage<List<User>>(true, "All User fetched successfully",
+                            userService.getAllUsers())));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
         }
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable String id) {
+    public ResponseEntity<Object> getUserById(@PathVariable String id) throws Exception {
         try {
-            return userService.getUserById(id);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(JsonResponseUtils
+                    .toJson(new ResponseMessage<User>(true, "User fetched successfully",
+                            userService.getUserById(id))));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
         }
     }
 

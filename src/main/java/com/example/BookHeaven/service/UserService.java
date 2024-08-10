@@ -21,14 +21,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
 
-    UserService(UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil,
-            UserDetailsService userDetailsService) {
+    UserService(UserRepository userRepository, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
     }
 
     public List<User> getAllUsers() {

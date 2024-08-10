@@ -3,6 +3,7 @@ package com.example.BookHeaven.controller;
 import com.example.BookHeaven.Utils.JsonResponseUtils;
 import com.example.BookHeaven.Utils.ResponseMessage;
 import com.example.BookHeaven.model.Book;
+import com.example.BookHeaven.model.User;
 import com.example.BookHeaven.service.BookService;
 import com.example.BookHeaven.service.CloudinaryService;
 import org.springframework.http.HttpStatus;
@@ -32,15 +33,45 @@ public class BookController {
 
 	// Get all books
 	@GetMapping({ "/books", "/admin/books" })
-	public List<Book> getAllBooks() {
-		return bookService.findAllBooks();
+	// public List<Book> getAllBooks() {
+	// return bookService.findAllBooks();
+	// }
+
+	// @GetMapping
+	public ResponseEntity<Object> getAllBooks() throws Exception {
+		try {
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(JsonResponseUtils
+					.toJson(new ResponseMessage<List<Book>>(true, "All Books fetched successfully",
+							bookService.getAllBooks())));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+		}
 	}
 
 	// Get a book by ID
+	// public ResponseEntity<Book> getBookById(@PathVariable String id) {
+	// Optional<Book> book = bookService.findBookById(id);
+	// return book.map(ResponseEntity::ok).orElseGet(() ->
+	// ResponseEntity.notFound().build());
+	// }
+
 	@GetMapping("/admin/books/{id}")
-	public ResponseEntity<Book> getBookById(@PathVariable String id) {
-		Optional<Book> book = bookService.findBookById(id);
-		return book.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<Object> getBookById(@PathVariable String id) throws Exception {
+		try {
+			return ResponseEntity.status(HttpStatus.ACCEPTED)
+					.body(JsonResponseUtils.toJson(new ResponseMessage<Book>(true, "All Books fetched successfully",
+							bookService.getBookById(id))));
+		} catch (RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+		}
 	}
 
 	@GetMapping("/hello")
@@ -110,25 +141,62 @@ public class BookController {
 	// }
 
 	// Update an existing book
+	// public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody
+	// Book book) {
+	// Book updatedBook = bookService.updateBook(id, book);
+	// if (updatedBook != null) {
+	// return ResponseEntity.ok(updatedBook);
+	// } else {
+	// return ResponseEntity.notFound().build();
+	// }
+	// }
+
 	@PutMapping("/admin/books/{id}")
-	public ResponseEntity<Book> updateBook(@PathVariable String id, @RequestBody Book book) {
-		Book updatedBook = bookService.updateBook(id, book);
-		if (updatedBook != null) {
-			return ResponseEntity.ok(updatedBook);
-		} else {
-			return ResponseEntity.notFound().build();
+	public ResponseEntity<Object> updateUser(@PathVariable String id, @RequestBody Book book) {
+		try {
+			Book updatedBook = bookService.updateBook(id, book);
+
+			if (updatedBook != null) {
+				return ResponseEntity.status(HttpStatus.OK)
+						.body(JsonResponseUtils
+								.toJson(new ResponseMessage<Book>(true, "Book updated successfully", updatedBook)));
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, "User not found")));
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
 		}
 	}
 
 	// Delete a book by ID
+	// public ResponseEntity<Void> deleteBook(@PathVariable String id) {
+	// Book book = bookService.getBookById(id);
+	// if (book != null) {
+	// bookService.deleteBook(id);
+	// return ResponseEntity.noContent().build();
+	// } else {
+	// return ResponseEntity.notFound().build();
+	// }
+	// }
+
 	@DeleteMapping("/admin/books/{id}")
-	public ResponseEntity<Void> deleteBook(@PathVariable String id) {
-		Optional<Book> book = bookService.findBookById(id);
-		if (book.isPresent()) {
-			bookService.deleteBook(id);
-			return ResponseEntity.noContent().build();
-		} else {
-			return ResponseEntity.notFound().build();
+	public ResponseEntity<Object> deleteBook(@PathVariable String id) {
+		try {
+			Book deletedBook = bookService.deleteBook(id);
+
+			if (deletedBook != null) {
+				return ResponseEntity.status(HttpStatus.OK)
+						.body(JsonResponseUtils
+								.toJson(new ResponseMessage<Book>(true, "Book deleted successfully", deletedBook)));
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, "User not found")));
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
 		}
 	}
 }
