@@ -89,7 +89,7 @@ public class BookController {
 			@RequestParam List<MultipartFile> img,
 			@RequestParam String isbn,
 			@RequestParam Integer publicationYear,
-			@RequestParam Integer page,
+			@RequestParam String page,
 			@RequestParam Integer physicalPrice,
 			@RequestParam Integer digitalPrice,
 			@RequestParam Boolean hasPhysicalCopy,

@@ -23,8 +23,8 @@ public class Book {
     String isbn;
     Integer physicalPrice;
     Integer digitalPrice;
-    Integer page;
-    Integer year;
+    String page;
+    Integer publicationYear;
     String language;
     String pdfUrl;
     Boolean hasPhysicalCopy;
@@ -40,8 +40,8 @@ public class Book {
             List<String> genre,
             Integer physicalPrice,
             Integer digitalPrice,
-            Integer page,
-            Integer year,
+            String page,
+            Integer publicationYear,
             String language,
             String pdfUrl,
             Boolean hasPhysicalCopy,
@@ -56,7 +56,7 @@ public class Book {
         this.physicalPrice = physicalPrice;
         this.digitalPrice = digitalPrice;
         this.page = page;
-        this.year = year;
+        this.publicationYear = publicationYear;
         this.language = language;
         this.pdfUrl = pdfUrl;
         this.hasPhysicalCopy = hasPhysicalCopy;
