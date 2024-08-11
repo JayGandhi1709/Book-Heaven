@@ -79,22 +79,35 @@ public class BookController {
 		return "Hello";
 	}
 
-	// Create a new book
 	@PostMapping("/admin/books")
-	public ResponseEntity<Object> createBook(@RequestParam("title") String title, @RequestParam("desc") String desc,
-			@RequestParam("authors") List<String> authors, @RequestParam("publisher") String publisher,
-			@RequestParam("genre") List<String> genre, @RequestParam("img") List<MultipartFile> img,
-			@RequestParam("isbn") String isbn, @RequestParam("year") Integer year,
-			@RequestParam("page") Integer pageCount, @RequestParam("price") Integer price,
-			@RequestParam("language") String language,
-			@RequestParam("PdfFile") MultipartFile pdf) throws IOException {
+	public ResponseEntity<Object> createBook(
+			@RequestParam String title,
+			@RequestParam String desc,
+			@RequestParam List<String> authors,
+			@RequestParam String publisher,
+			@RequestParam List<String> genre,
+			@RequestParam List<MultipartFile> img,
+			@RequestParam String isbn,
+			@RequestParam Integer publicationYear,
+			@RequestParam Integer page,
+			@RequestParam Integer physicalPrice,
+			@RequestParam Integer digitalPrice,
+			@RequestParam Boolean hasPhysicalCopy,
+			@RequestParam Boolean hasDigitalCopy,
+			@RequestParam String language,
+			@RequestParam(required = false) MultipartFile pdf) throws IOException {
+
 		try {
+			// Upload images to cloud service and get URLs
 			List<String> imgData = this.cloudinaryService.uploadMultipleImages(img);
 
-			// int pageCount = getPageCount(pdf.getInputStream());
+			// Upload PDF if a digital copy is available
+			String pdfData = null;
+			if (hasDigitalCopy && pdf != null) {
+				pdfData = this.cloudinaryService.uploadPDF(pdf);
+			}
 
-			String pdfData = this.cloudinaryService.uploadPDF(pdf);
-
+			// Create the Book object
 			Book book = new Book(
 					title,
 					desc,
@@ -103,21 +116,29 @@ public class BookController {
 					publisher,
 					isbn,
 					genre,
-					price,
-					pageCount,
-					year,
+					physicalPrice,
+					digitalPrice,
+					page,
+					publicationYear,
 					language,
-					pdfData);
+					pdfData,
+					hasPhysicalCopy,
+					hasDigitalCopy);
 
+			// Save the book using the service
 			Book createdBook = bookService.createBook(book);
 
+			// Return a success response
 			return ResponseEntity.status(HttpStatus.CREATED).body(
 					JsonResponseUtils
 							.toJson(new ResponseMessage<Book>(true, "Book created successfully", createdBook)));
+
 		} catch (RuntimeException e) {
+			// Handle runtime exceptions
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
 		} catch (Exception e) {
+			// Handle other exceptions
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
 		}

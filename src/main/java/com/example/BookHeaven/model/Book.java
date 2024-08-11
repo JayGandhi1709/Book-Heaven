@@ -12,48 +12,54 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Document(collection = "books")
 public class Book {
-	@Id
-	String id;
-	String title;
-	String desc;
-	List<String> img;
-	List<String> authors;
-	String publisher;
-	List<String> genre;
-	String isbn;
-	Integer price;
-	Integer page;
-	Integer year;
-	String language;
-	String pdfUrl;
+    @Id
+    String id;
+    String title;
+    String desc;
+    List<String> img;
+    List<String> authors;
+    String publisher;
+    List<String> genre;
+    String isbn;
+    Integer physicalPrice;
+    Integer digitalPrice;
+    Integer page;
+    Integer year;
+    String language;
+    String pdfUrl;
+    Boolean hasPhysicalCopy;
+    Boolean hasDigitalCopy;
 
-	
-	public Book(
-			String title,
-			String desc,
-			List<String> img,
-			List<String> author,
-			String publisher,
-			String isbn,
-			List<String> genre,
-			Integer price,
-			Integer page,
-			Integer year,
-			String language,
-			String pdfUrl) {
-		this.title = title;
-		this.desc = desc;
-		this.img = img;
-		this.authors = author;
-		this.genre = genre;
-		this.publisher = publisher;
-		this.price = price;
-		this.page = page;
-		this.isbn = isbn;
-		this.year = year;
-		this.language = language;
-		this.pdfUrl = pdfUrl;
-	}
-
-	
+    public Book(
+            String title,
+            String desc,
+            List<String> img,
+            List<String> authors,
+            String publisher,
+            String isbn,
+            List<String> genre,
+            Integer physicalPrice,
+            Integer digitalPrice,
+            Integer page,
+            Integer year,
+            String language,
+            String pdfUrl,
+            Boolean hasPhysicalCopy,
+            Boolean hasDigitalCopy) {
+        this.title = title;
+        this.desc = desc;
+        this.img = img;
+        this.authors = authors;
+        this.genre = genre;
+        this.publisher = publisher;
+        this.isbn = isbn;
+        this.physicalPrice = physicalPrice;
+        this.digitalPrice = digitalPrice;
+        this.page = page;
+        this.year = year;
+        this.language = language;
+        this.pdfUrl = pdfUrl;
+        this.hasPhysicalCopy = hasPhysicalCopy;
+        this.hasDigitalCopy = hasDigitalCopy;
+    }
 }
