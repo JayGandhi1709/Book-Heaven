@@ -84,8 +84,9 @@ public class BookController {
 	public ResponseEntity<Object> createBook(@RequestParam("title") String title, @RequestParam("desc") String desc,
 			@RequestParam("authors") List<String> authors, @RequestParam("publisher") String publisher,
 			@RequestParam("genre") List<String> genre, @RequestParam("img") List<MultipartFile> img,
-			@RequestParam("isbn") String isbn, @RequestParam("publicationYear") Integer publicationYear,
+			@RequestParam("isbn") String isbn, @RequestParam("year") Integer year,
 			@RequestParam("page") Integer pageCount, @RequestParam("price") Integer price,
+			@RequestParam("language") String language,
 			@RequestParam("PdfFile") MultipartFile pdf) throws IOException {
 		try {
 			List<String> imgData = this.cloudinaryService.uploadMultipleImages(img);
@@ -104,7 +105,8 @@ public class BookController {
 					genre,
 					price,
 					pageCount,
-					publicationYear,
+					year,
+					language,
 					pdfData);
 
 			Book createdBook = bookService.createBook(book);

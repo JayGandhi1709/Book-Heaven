@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.BookHeaven.model.Book;
-import com.example.BookHeaven.model.User;
 import com.example.BookHeaven.repository.BookRepository;
 
 @Service
