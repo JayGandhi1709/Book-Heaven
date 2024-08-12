@@ -19,16 +19,16 @@ public class Book {
     List<String> img;
     List<String> authors;
     String publisher;
+    Integer publicationYear;
     List<String> genre;
     String isbn;
     Integer physicalPrice;
     Integer digitalPrice;
     String page;
-    Integer publicationYear;
     String language;
-    String pdfUrl;
     Boolean hasPhysicalCopy;
     Boolean hasDigitalCopy;
+    String pdfUrl;
 
     public Book(
             String title,

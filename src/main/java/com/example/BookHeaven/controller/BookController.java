@@ -98,6 +98,7 @@ public class BookController {
 			@RequestParam(required = false) MultipartFile pdf) throws IOException {
 
 		try {
+
 			// Upload images to cloud service and get URLs
 			List<String> imgData = this.cloudinaryService.uploadMultipleImages(img);
 

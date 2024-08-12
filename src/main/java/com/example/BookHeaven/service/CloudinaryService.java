@@ -28,14 +28,14 @@ public class CloudinaryService implements CloudinaryRepository {
 
 	public List<String> uploadMultipleImages(List<MultipartFile> files) {
 		List<String> urls = new ArrayList<>();
-//        List<Map> uploadResults = new ArrayList<>();
+		// List<Map> uploadResults = new ArrayList<>();
 
 		for (MultipartFile file : files) {
 			if (isImage(file)) {
 				try {
 					Map<String, String> uploadResult = this.cloudinary.uploader().upload(file.getBytes(),
 							Map.of("folder", "book images"));
-//                uploadResults.add(uploadResult);
+					// uploadResults.add(uploadResult);
 					String url = uploadResult.get("url");
 					urls.add(url);
 				} catch (IOException e) {
@@ -54,13 +54,14 @@ public class CloudinaryService implements CloudinaryRepository {
 	public String uploadPDF(MultipartFile file) {
 		if (isPdf(file)) {
 			try {
-				Map<String, String> uploadResult = this.cloudinary.uploader().upload(file.getBytes(), Map.of("folder", "book pdf"));
-                return uploadResult.get("url");
+				Map<String, String> uploadResult = this.cloudinary.uploader().upload(file.getBytes(),
+						Map.of("folder", "book pdf"));
+				return uploadResult.get("url");
 			} catch (IOException e) {
 				throw new RuntimeException("Image uploading failed");
 			}
 		} else {
-			throw new RuntimeException("Invalid file type: " + file.getOriginalFilename());
+			throw new RuntimeException("Invalid file type: " + file);
 		}
 	}
 
@@ -74,5 +75,4 @@ public class CloudinaryService implements CloudinaryRepository {
 		return mimeType != null && mimeType.equals("application/pdf");
 	}
 
-	
 }
