@@ -29,7 +29,7 @@ public class AdminController {
 
     @GetMapping("/health-check")
     public String hello() {
-        return "Admin ok";
+        return "Admin API ok";
     }
 
     @GetMapping("/counts")
