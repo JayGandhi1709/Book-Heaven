@@ -64,7 +64,7 @@ public class UserController {
 
     @GetMapping("/health-check")
     public String healthCheck() {
-        return "ok";
+        return "Users ok";
     }
 
     @PostMapping
