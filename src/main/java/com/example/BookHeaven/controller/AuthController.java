@@ -45,7 +45,7 @@ public class AuthController {
 
     @GetMapping("/health-check")
     public String hello() {
-        return "ok";
+        return "Auth ok";
     }
 
     @PostMapping("/register")
