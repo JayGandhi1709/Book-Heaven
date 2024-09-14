@@ -18,9 +18,10 @@ public class CloudinaryService implements CloudinaryRepository {
 	@Autowired
 	private Cloudinary cloudinary;
 
-	public Map<String, String> uploadImage(MultipartFile file) {
+	public String uploadImage(MultipartFile file, String folderName) {
 		try {
-			return this.cloudinary.uploader().upload(file.getBytes(), Map.of("folder", "book images"));
+			Map uploadResult = this.cloudinary.uploader().upload(file.getBytes(), Map.of("folder", folderName));
+			return uploadResult.get("url").toString();
 		} catch (IOException e) {
 			throw new RuntimeException("Image uploading failed");
 		}
@@ -54,7 +55,7 @@ public class CloudinaryService implements CloudinaryRepository {
 	public String uploadPDF(MultipartFile file) {
 		if (isPdf(file)) {
 			try {
-				Map<String, String> uploadResult = this.cloudinary.uploader().upload(file.getBytes(),
+				final Map<String, String> uploadResult = this.cloudinary.uploader().upload(file.getBytes(),
 						Map.of("folder", "book pdf"));
 				return uploadResult.get("url");
 			} catch (IOException e) {
