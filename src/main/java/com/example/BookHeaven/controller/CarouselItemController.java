@@ -36,6 +36,11 @@ public class CarouselItemController {
         this.cloudinaryService = cloudinaryService;
     }
 
+    @GetMapping("carousel/health-check")
+	public String hello() {
+		return "Carousel Ok";
+	}
+
     // Get all carousel items count
     @GetMapping("admin/carousel/count")
     public ResponseEntity<Long> getAllItemsCount() {
@@ -74,7 +79,8 @@ public class CarouselItemController {
             String imageUrl = this.cloudinaryService.uploadImage(image, "carousel");
             CarouselItem item = new CarouselItem(title, description, imageUrl, displayOrder);
             CarouselItem newItem = carouselItemService.createCarouselItem(item);
-            return new ResponseEntity<>(newItem, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<CarouselItem>(false,newItem)))
         } catch (RuntimeException e) {
             // Handle runtime exceptions
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
