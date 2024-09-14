@@ -51,16 +51,39 @@ public class CarouselItemController {
     // Get all carousel items
     @GetMapping("/carousel")
     public ResponseEntity<List<CarouselItem>> getAllItems() {
-        List<CarouselItem> items = carouselItemService.getAllItems();
-        return new ResponseEntity<>(items, HttpStatus.OK);
+        try{
+            List<CarouselItem> items = carouselItemService.getAllItems();
+            return ResponseEntity.status(HttpStatus.OK)
+                        .body(JsonResponseUtils.toJson(
+                                new ResponseMessage<CarouselItem>(false, "Carousel Fatched successfully", items)));
+        }catch (RuntimeException e) {
+            // Handle runtime exceptions
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        }
     }
 
     // Get a carousel item by ID
     @GetMapping("admin/carousel/{id}")
     public ResponseEntity<CarouselItem> getItemById(@PathVariable String id) {
-        Optional<CarouselItem> item = carouselItemService.getItemById(id);
-        return item.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        try{
+            Optional<CarouselItem> item = carouselItemService.getItemById(id);
+            // return item.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+            //         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.OK)
+                        .body(JsonResponseUtils.toJson(
+                                new ResponseMessage<CarouselItem>(false, "Carousel Fatched successfully", value)));
+        }catch (RuntimeException e) {
+            // Handle runtime exceptions
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        }
     }
 
     // Create a new carousel item
