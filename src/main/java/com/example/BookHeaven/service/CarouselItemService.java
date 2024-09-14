@@ -24,8 +24,8 @@ public class CarouselItemService {
         return carouselItemRepository.findAll();
     }
 
-    public Optional<CarouselItem> getItemById(String id) {
-        return carouselItemRepository.findById(id);
+    public CarouselItem getItemById(String id) {
+        return carouselItemRepository.findById(id).orElse(null);
     }
 
     public CarouselItem createCarouselItem(CarouselItem item) {

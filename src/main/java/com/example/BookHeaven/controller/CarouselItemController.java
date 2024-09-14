@@ -50,13 +50,13 @@ public class CarouselItemController {
 
     // Get all carousel items
     @GetMapping("/carousel")
-    public ResponseEntity<List<CarouselItem>> getAllItems() {
-        try{
+    public ResponseEntity<Object> getAllItems() {
+        try {
             List<CarouselItem> items = carouselItemService.getAllItems();
             return ResponseEntity.status(HttpStatus.OK)
-                        .body(JsonResponseUtils.toJson(
-                                new ResponseMessage<CarouselItem>(false, "Carousel Fatched successfully", items)));
-        }catch (RuntimeException e) {
+                    .body(JsonResponseUtils.toJson(
+                            new ResponseMessage<List<CarouselItem>>(false, "Carousel Fatched successfully", items)));
+        } catch (RuntimeException e) {
             // Handle runtime exceptions
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
@@ -68,15 +68,15 @@ public class CarouselItemController {
 
     // Get a carousel item by ID
     @GetMapping("admin/carousel/{id}")
-    public ResponseEntity<CarouselItem> getItemById(@PathVariable String id) {
-        try{
-            Optional<CarouselItem> item = carouselItemService.getItemById(id);
+    public ResponseEntity<Object> getItemById(@PathVariable String id) {
+        try {
+            CarouselItem item = carouselItemService.getItemById(id);
             // return item.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            //         .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            // .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
             return ResponseEntity.status(HttpStatus.OK)
-                        .body(JsonResponseUtils.toJson(
-                                new ResponseMessage<CarouselItem>(false, "Carousel Fatched successfully", value)));
-        }catch (RuntimeException e) {
+                    .body(JsonResponseUtils.toJson(
+                            new ResponseMessage<CarouselItem>(false, "Carousel Fatched successfully", item)));
+        } catch (RuntimeException e) {
             // Handle runtime exceptions
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
