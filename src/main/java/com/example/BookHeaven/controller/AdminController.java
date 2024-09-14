@@ -13,6 +13,7 @@ import com.example.BookHeaven.Utils.ResponseMessage;
 import com.example.BookHeaven.model.User;
 import com.example.BookHeaven.repository.BookRepository;
 import com.example.BookHeaven.repository.UserRepository;
+import com.example.BookHeaven.repository.CarouselItemRepository;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -38,6 +39,7 @@ public class AdminController {
             HashMap<String, Integer> counts = new HashMap<>();
             counts.put("userCount", (int) userRepository.count());
             counts.put("bookCount", (int) bookRepository.count());
+            counts.put("carouselCount", (int) CarouselItemRepository.count());
             // counts.put("categoryCount", categoryRepository.count());
             // panding orders
             counts.put("totalOrders", 50);
