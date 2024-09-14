@@ -21,11 +21,14 @@ public class AdminController {
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
+    private final CarouselItemRepository carouselItemRepository;
     // private CategoryRepository categoryRepository;
 
-    AdminController(UserRepository userRepository, BookRepository bookRepository) {
+    AdminController(UserRepository userRepository, BookRepository bookRepository,
+            CarouselItemRepository carouselItemRepository) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
+        this.carouselItemRepository = carouselItemRepository;
     }
 
     @GetMapping("/health-check")
@@ -39,7 +42,7 @@ public class AdminController {
             HashMap<String, Integer> counts = new HashMap<>();
             counts.put("userCount", (int) userRepository.count());
             counts.put("bookCount", (int) bookRepository.count());
-            counts.put("carouselCount", (int) CarouselItemRepository.count());
+            counts.put("carouselCount", (int) carouselItemRepository.count());
             // counts.put("categoryCount", categoryRepository.count());
             // panding orders
             counts.put("totalOrders", 50);

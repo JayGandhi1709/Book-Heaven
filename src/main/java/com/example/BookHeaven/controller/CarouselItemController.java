@@ -37,9 +37,9 @@ public class CarouselItemController {
     }
 
     @GetMapping("carousel/health-check")
-	public String hello() {
-		return "Carousel Ok";
-	}
+    public String hello() {
+        return "Carousel Ok";
+    }
 
     // Get all carousel items count
     @GetMapping("admin/carousel/count")
@@ -80,7 +80,8 @@ public class CarouselItemController {
             CarouselItem item = new CarouselItem(title, description, imageUrl, displayOrder);
             CarouselItem newItem = carouselItemService.createCarouselItem(item);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(JsonResponseUtils.toJson(new ResponseMessage<CarouselItem>(false,newItem)))
+                    .body(JsonResponseUtils.toJson(
+                            new ResponseMessage<CarouselItem>(false, "Carousel created successfully", newItem)));
         } catch (RuntimeException e) {
             // Handle runtime exceptions
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
