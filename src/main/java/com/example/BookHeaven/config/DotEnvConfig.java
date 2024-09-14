@@ -13,14 +13,20 @@ public class DotEnvConfig {
 
     @Bean
     public Dotenv dotenv() {
+        try {
+            // Ensure Dotenv loads from the current directory or custom path
+            Dotenv dotenv = Dotenv.configure()
+                    .directory("./") // You can also use an absolute path if needed
+                    .ignoreIfMalformed()
+                    .ignoreIfMissing()
+                    .load();
 
-        // Ensure that Dotenv is loaded and returned
-        Dotenv dotenv = Dotenv.configure().directory("./").load();
-        if (dotenv == null) {
-            logger.error("Dotenv failed to load");
-        } else {
             logger.info("Dotenv loaded successfully");
+            return dotenv;
+
+        } catch (Exception e) {
+            logger.error("Failed to load .env file", e);
+            throw new RuntimeException("Failed to load .env file", e);
         }
-        return dotenv;
     }
 }

@@ -7,7 +7,6 @@ WORKDIR /app
 # Copy Maven project files
 COPY pom.xml ./
 COPY src ./src/
-COPY .env ./
 
 # Package the application
 RUN mvn clean package -DskipTests
@@ -20,9 +19,6 @@ WORKDIR /app
 
 # Copy the packaged JAR file from the build stage
 COPY --from=build /app/target/*.jar /app/app.jar
-
-# Copy the .env file from the build stage (if needed)
-COPY --from=build /app/.env /app/.env
 
 # Expose the application port
 EXPOSE 8080
