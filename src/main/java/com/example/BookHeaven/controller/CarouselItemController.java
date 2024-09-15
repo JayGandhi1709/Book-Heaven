@@ -43,9 +43,20 @@ public class CarouselItemController {
 
     // Get all carousel items count
     @GetMapping("admin/carousel/count")
-    public ResponseEntity<Long> getAllItemsCount() {
-        long count = carouselItemService.getAllItemsCount();
-        return new ResponseEntity<>(count, HttpStatus.OK);
+    public ResponseEntity<Object> getAllItemsCount() {
+        try {
+            int count = carouselItemService.getAllItemsCount();
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(JsonResponseUtils.toJson(
+                            new ResponseMessage<>(true, "Carousel Count Fatched successfully", count)));
+        } catch (RuntimeException e) {
+            // Handle runtime exceptions
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        }
     }
 
     // Get all carousel items
@@ -55,7 +66,7 @@ public class CarouselItemController {
             List<CarouselItem> items = carouselItemService.getAllItems();
             return ResponseEntity.status(HttpStatus.OK)
                     .body(JsonResponseUtils.toJson(
-                            new ResponseMessage<List<CarouselItem>>(false, "Carousel Fatched successfully", items)));
+                            new ResponseMessage<List<CarouselItem>>(true, "Carousel Fatched successfully", items)));
         } catch (RuntimeException e) {
             // Handle runtime exceptions
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -71,11 +82,13 @@ public class CarouselItemController {
     public ResponseEntity<Object> getItemById(@PathVariable String id) {
         try {
             CarouselItem item = carouselItemService.getItemById(id);
-            // return item.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            // .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            if (item == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, "Carousel not found")));
+            }
             return ResponseEntity.status(HttpStatus.OK)
                     .body(JsonResponseUtils.toJson(
-                            new ResponseMessage<CarouselItem>(false, "Carousel Fatched successfully", item)));
+                            new ResponseMessage<CarouselItem>(true, "Carousel Fatched successfully", item)));
         } catch (RuntimeException e) {
             // Handle runtime exceptions
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -114,14 +127,25 @@ public class CarouselItemController {
         }
     }
 
-    // Update an existing carousel item
+    // // Update an existing carousel item
     @PutMapping("admin/carousel/{id}")
-    public ResponseEntity<CarouselItem> updateCarouselItem(@PathVariable String id, @RequestBody CarouselItem item) {
-        CarouselItem updatedItem = carouselItemService.updateCarouselItem(id, item);
-        if (updatedItem != null) {
-            return new ResponseEntity<>(updatedItem, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Object> updateCarouselItem(@PathVariable String id,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String description) {
+
+        try {
+            CarouselItem newItem = carouselItemService.updateCarouselItem(id,
+                    new CarouselItem(title, description));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(JsonResponseUtils.toJson(
+                            new ResponseMessage<CarouselItem>(true, "Carousel updated successfully", newItem)));
+        } catch (RuntimeException e) {
+            // Handle runtime exceptions
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
         }
     }
 
@@ -131,4 +155,26 @@ public class CarouselItemController {
         carouselItemService.deleteCarouselItem(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    // write a method to update the display order of the carousel items by id of
+    // list of display order
+    @PutMapping("admin/carousel/update-display-order")
+    public ResponseEntity<Object> updateDisplayOrder(@RequestBody List<CarouselItem> items) {
+        try {
+            for (CarouselItem item : items) {
+                carouselItemService.updateDisplayOrder(item.getId(), item.getDisplayOrder());
+            }
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(JsonResponseUtils
+                            .toJson(new ResponseMessage<Object>(true, "Display order updated successfully")));
+        } catch (RuntimeException e) {
+            // Handle runtime exceptions
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        }
+    }
+
 }

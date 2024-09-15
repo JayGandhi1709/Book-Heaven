@@ -16,8 +16,8 @@ public class CarouselItemService {
     private CarouselItemRepository carouselItemRepository;
 
     // Get all carousel items count
-    public long getAllItemsCount() {
-        return carouselItemRepository.count();
+    public int getAllItemsCount() {
+        return (int) (carouselItemRepository.count());
     }
 
     public List<CarouselItem> getAllItems() {
@@ -38,8 +38,6 @@ public class CarouselItemService {
             CarouselItem item = existingItem.get();
             item.setTitle(updatedItem.getTitle());
             item.setDescription(updatedItem.getDescription());
-            item.setImageUrl(updatedItem.getImageUrl());
-            item.setDisplayOrder(updatedItem.getDisplayOrder());
             return carouselItemRepository.save(item);
         } else {
             return null;
@@ -48,5 +46,15 @@ public class CarouselItemService {
 
     public void deleteCarouselItem(String id) {
         carouselItemRepository.deleteById(id);
+    }
+
+    // update display order by Carsouel Item Id
+    public void updateDisplayOrder(String id, int displayOrder) {
+        Optional<CarouselItem> existingItem = carouselItemRepository.findById(id);
+        if (existingItem.isPresent()) {
+            CarouselItem item = existingItem.get();
+            item.setDisplayOrder(displayOrder);
+            carouselItemRepository.save(item);
+        }
     }
 }

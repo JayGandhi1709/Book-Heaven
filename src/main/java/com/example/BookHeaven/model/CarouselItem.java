@@ -26,4 +26,9 @@ public class CarouselItem {
         this.imageUrl = imageUrl;
         this.displayOrder = displayOrder;
     }
+
+    public CarouselItem(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
 }
