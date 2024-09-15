@@ -151,9 +151,20 @@ public class CarouselItemController {
 
     // Delete a carousel item
     @DeleteMapping("admin/carousel/{id}")
-    public ResponseEntity<Void> deleteCarouselItem(@PathVariable String id) {
-        carouselItemService.deleteCarouselItem(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Object> deleteCarouselItem(@PathVariable String id) {
+        try {
+            var deletedItem = carouselItemService.deleteCarouselItem(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(JsonResponseUtils
+                            .toJson(new ResponseMessage<Object>(true, "Carousel deleted successfully", deletedItem)));
+        } catch (RuntimeException e) {
+            // Handle runtime exceptions
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(JsonResponseUtils.toJson(new ResponseMessage<Object>(false, e.getMessage())));
+        }
     }
 
     // write a method to update the display order of the carousel items by id of

@@ -44,8 +44,15 @@ public class CarouselItemService {
         }
     }
 
-    public void deleteCarouselItem(String id) {
-        carouselItemRepository.deleteById(id);
+    public CarouselItem deleteCarouselItem(String id) {
+        Optional<CarouselItem> existingItem = carouselItemRepository.findById(id);
+        if (existingItem.isPresent()) {
+            CarouselItem item = existingItem.get();
+            carouselItemRepository.delete(item);
+            return item;
+        } else {
+            return null;
+        }
     }
 
     // update display order by Carsouel Item Id
