@@ -89,9 +89,7 @@ public class CarouselItemController {
     // Create a new carousel item
     @PostMapping("admin/carousel")
     public ResponseEntity<Object> createCarouselItem(@RequestParam String title,
-            @RequestParam String description, @RequestParam MultipartFile image,
-            @RequestParam int displayOrder) {
-
+            @RequestParam String description, @RequestParam MultipartFile image) {
         try {
 
             if (image == null || image.isEmpty()) {
@@ -100,11 +98,12 @@ public class CarouselItemController {
             }
 
             String imageUrl = this.cloudinaryService.uploadImage(image, "carousel");
+            int displayOrder = carouselItemService.getAllItemsCount() + 1;
             CarouselItem item = new CarouselItem(title, description, imageUrl, displayOrder);
             CarouselItem newItem = carouselItemService.createCarouselItem(item);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(JsonResponseUtils.toJson(
-                            new ResponseMessage<CarouselItem>(false, "Carousel created successfully", newItem)));
+                            new ResponseMessage<CarouselItem>(true, "Carousel created successfully", newItem)));
         } catch (RuntimeException e) {
             // Handle runtime exceptions
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
