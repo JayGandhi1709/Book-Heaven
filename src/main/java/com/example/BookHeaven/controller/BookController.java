@@ -39,7 +39,7 @@ public class BookController {
 	// private FileService fileService;
 
 	// Get all books
-	@GetMapping({ "/books", "/admin/books" })
+	@GetMapping("/books")
 	// public List<Book> getAllBooks() {
 	// return bookService.findAllBooks();
 	// }
