@@ -24,7 +24,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -54,8 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().hasRole("ADMIN"));
 
-        // http.exceptionHandling(entry ->
-        // entry.authenticationEntryPoint(authenticationEntryPoint()));
+        http.exceptionHandling(entry -> entry.authenticationEntryPoint(authenticationEntryPoint()));
 
         http.sessionManagement(
                 sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

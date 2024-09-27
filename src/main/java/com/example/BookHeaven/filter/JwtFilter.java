@@ -52,13 +52,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
-        // else if (email == null) {
-        // // If email is null, the token is invalid
-        // res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired
-        // token");
-        // return;
-        // }
-        res.addHeader("admin", "jay");
         chain.doFilter(req, res);
     }
 }
