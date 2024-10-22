@@ -70,6 +70,7 @@ public class OrderService {
             Order physicalOrder = new Order();
             physicalOrder.setUserId(order.getUserId());
             physicalOrder.setOrderDate(order.getOrderDate());
+            physicalOrder.setPaymentID(order.getPaymentID());
             physicalOrder.setDeliveryAddress(order.getDeliveryAddress());
             physicalOrder.setTotalPrice(calculateTotalPrice(physicalItems)); // Recalculate price
             physicalOrder.setPaymentMethod(order.getPaymentMethod());
@@ -85,6 +86,7 @@ public class OrderService {
             digitalOrder.setUserId(order.getUserId());
             digitalOrder.setOrderDate(order.getOrderDate());
             digitalOrder.setDeliveryAddress(order.getDeliveryAddress());
+            digitalOrder.setPaymentID(order.getPaymentID());
             digitalOrder.setTotalPrice(calculateTotalPrice(digitalItems)); // Recalculate price
             digitalOrder.setPaymentMethod(order.getPaymentMethod());
             digitalOrder.setOrderStatus(order.getOrderStatus());

@@ -13,6 +13,7 @@ public class Order {
     private String id; // Order ID
     private String userId; // User who placed the order
     private String orderDate; // Date of the order
+    private String paymentID; // payment ID
     private String deliveryAddress; // Delivery address for the order
     private double totalPrice; // Total price for the order
     private String paymentMethod; // Payment method used
